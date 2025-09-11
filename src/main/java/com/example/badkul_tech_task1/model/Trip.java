@@ -1,7 +1,6 @@
 package com.example.badkul_tech_task1.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.DecimalMin;
@@ -39,6 +38,7 @@ public class Trip {
     @DecimalMin(value = "500.0", message = "price should be at least 500.")
     private Double price;
 
+    @NotNull(message = "status is required.")
     @Enumerated(EnumType.STRING)
     private TripStatus status;
 
