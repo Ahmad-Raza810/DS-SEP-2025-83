@@ -3,6 +3,7 @@ package com.example.badkul_tech_task1.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -26,18 +27,23 @@ public class Trip {
     @NotBlank(message = "destination is required.")
     private String destination;
 
-    @NotNull(message ="start date is required.")
-    @JsonFormat(pattern ="dd-MM-yyyy")
+    @NotNull(message = "start date is required.")
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date startDate;
 
-    @NotNull(message ="start date is required.")
-    @JsonFormat(pattern ="dd-MM-yyyy")
+    @NotNull(message = "end date is required.")
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date endDate;
 
-    @NotNull(message = "price ids required.")
-    @DecimalMin(value ="500.0",message = "price should be at least 500.")
+    @NotNull(message = "price is required.")
+    @DecimalMin(value = "500.0", message = "price should be at least 500.")
     private Double price;
 
     @Enumerated(EnumType.STRING)
     private TripStatus status;
+
+    @AssertTrue(message = "End date must be After start date.")
+        public boolean isValidDateRange() {
+            return endDate.after(startDate);
+        }
 }
