@@ -1,0 +1,43 @@
+package com.example.badkul_tech_task1.model;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.annotation.Nonnull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.Date;
+
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Trip {
+
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotBlank(message = "destination is required.")
+    private String destination;
+
+    @NotNull(message ="start date is required.")
+    @JsonFormat(pattern ="dd-MM-yyyy")
+    private Date startDate;
+
+    @NotNull(message ="start date is required.")
+    @JsonFormat(pattern ="dd-MM-yyyy")
+    private Date endDate;
+
+    @NotNull(message = "price ids required.")
+    @DecimalMin(value ="500.0",message = "price should be at least 500.")
+    private Double price;
+
+    @Enumerated(EnumType.STRING)
+    private TripStatus status;
+}
