@@ -1,0 +1,56 @@
+package com.example.badkul_tech_task1.controller;
+
+
+import com.example.badkul_tech_task1.model.Trip;
+import com.example.badkul_tech_task1.response.ApiResponse;
+import com.example.badkul_tech_task1.service.TripService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+
+@RestController
+@RequestMapping("api/")
+public class TripController {
+
+    private final TripService tripService;
+
+    public TripController(TripService tripService) {
+        this.tripService = tripService;
+    }
+
+
+    //endpoint for creating a trip
+    @PostMapping("trip")
+    public ResponseEntity<ApiResponse<Trip>> addTrip(@RequestBody @Valid Trip trip){
+       Trip addedTrip=tripService.addTrip(trip);
+
+       ApiResponse<Trip> response=new ApiResponse<>(
+               addedTrip,
+               "trip successfully added.",
+               HttpStatus.OK.value(),
+               LocalDateTime.now()
+       );
+
+       return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+
+
+    //endpoint for getting a trip by Id
+    @GetMapping("trip/{id}")
+    public ResponseEntity<ApiResponse<Trip>> addTrip(@PathVariable Long id){
+        Trip addedTrip=tripService.addTrip(trip);
+
+        ApiResponse<Trip> response=new ApiResponse<>(
+                addedTrip,
+                "trip successfully added.",
+                HttpStatus.OK.value(),
+                LocalDateTime.now()
+        );
+
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+}
