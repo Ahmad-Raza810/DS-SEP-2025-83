@@ -2,6 +2,7 @@ package com.example.badkul_tech_task1.controller;
 
 
 import com.example.badkul_tech_task1.dtos.TripRequestDTO;
+import com.example.badkul_tech_task1.dtos.TripUpdateDTO;
 import com.example.badkul_tech_task1.model.Trip;
 import com.example.badkul_tech_task1.response.ApiResponse;
 import com.example.badkul_tech_task1.service.TripService;
@@ -71,4 +72,21 @@ public class TripController {
 
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
+
+    //endpoint for updating a trip by id
+    @PutMapping("trip/{id}")
+    public ResponseEntity<ApiResponse<Trip>> updateTripById(@PathVariable Long id, TripUpdateDTO dto){
+
+
+        ApiResponse<Trip> response=new ApiResponse<>(
+                fetchedTrip,
+                "trip fetched successfully.",
+                HttpStatus.OK.value(),
+                LocalDateTime.now()
+        );
+
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+
 }

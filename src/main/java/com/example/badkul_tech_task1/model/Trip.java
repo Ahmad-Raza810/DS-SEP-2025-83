@@ -1,6 +1,7 @@
 package com.example.badkul_tech_task1.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.DecimalMin;
@@ -42,6 +43,7 @@ public class Trip {
     @Enumerated(EnumType.STRING)
     private TripStatus status;
 
+    @JsonIgnore
     @AssertTrue(message = "End date must be After start date.")
         public boolean isValidDateRange() {
         if (startDate != null && endDate != null) return endDate.after(startDate);
