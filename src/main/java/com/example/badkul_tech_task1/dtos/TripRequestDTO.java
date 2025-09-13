@@ -36,13 +36,16 @@ public class TripRequestDTO {
     @DecimalMin(value = "500.0", message = "price should be at least 500.")
     private Double price;
 
-    @NotNull(message = "status is required.")
+    @NotBlank(message = "status is required.")
     @ValueOfEnum(enumClass = TripStatus.class,message = "status must be PLANNED, ONGOING or COMPLETED")
     @Enumerated(EnumType.STRING)
-    private TripStatus status;
+    private String status;
 
     @AssertTrue(message = "End date must be After start date.")
     public boolean isValidDateRange() {
+        if (startDate == null || endDate==null) {
+            return false;
+        }
         return endDate.after(startDate);
     }
 
@@ -50,8 +53,8 @@ public class TripRequestDTO {
     //method which convert dto object into Trip object
     public static Trip dtoToTrip(TripRequestDTO dto){
         Trip trip=new Trip();
-        trip.setDestination(trip.getDestination());
-        trip.setStatus(dto.getStatus());
+        trip.setDestination(dto.getDestination());
+        trip.setStatus(TripStatus.valueOf(dto.getStatus()));
         trip.setPrice(dto.getPrice());
         trip.setStartDate(dto.getStartDate());
         trip.setEndDate(dto.getEndDate());

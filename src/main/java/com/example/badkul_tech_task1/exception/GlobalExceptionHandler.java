@@ -60,18 +60,18 @@ public class GlobalExceptionHandler {
     }
 
 
-//    //handler for HttpMessageNotReadableException
-//    @ExceptionHandler(value = HttpMessageNotReadableException.class)
-//    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
-//
-//        ErrorResponse response = new ErrorResponse(
-//                "date should be in Valid format (dd-MM-yyyy).",
-//                null,
-//                HttpStatus.NOT_FOUND.value(),
-//                LocalDateTime.now()
-//        );
-//
-//        return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
-//    }
+    //handler for HttpMessageNotReadableException
+    @ExceptionHandler(value = HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+
+        ErrorResponse response = new ErrorResponse(
+                "date should be in Valid format (dd-MM-yyyy).",
+                null,
+                HttpStatus.NOT_FOUND.value(),
+                LocalDateTime.now()
+        );
+
+        return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
+    }
 
 }
