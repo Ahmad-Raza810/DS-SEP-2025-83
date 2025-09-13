@@ -5,10 +5,13 @@ import com.example.badkul_tech_task1.dtos.TripResponseDTO;
 import com.example.badkul_tech_task1.dtos.TripUpdateDTO;
 import com.example.badkul_tech_task1.exception.ResourceNotFoundException;
 import com.example.badkul_tech_task1.model.Trip;
+import com.example.badkul_tech_task1.model.TripStatus;
 import com.example.badkul_tech_task1.repository.TripRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -20,28 +23,31 @@ public class TripServiceImpl implements TripService{
         this.tripRepository = tripRepository;
     }
 
+
    //service method for creating a trip
     @Override
-    public TripResponseDTO addTrip(TripRequestDTO dto) {
+    public Trip addTrip(TripRequestDTO dto) {
         Trip trip=TripRequestDTO.dtoToTrip(dto);
-        return TripResponseDTO.tripToDto(tripRepository.save(trip));
+        return tripRepository.save(trip);
     }
+
 
     //service method for get all trip
     @Override
-    public List<TripResponseDTO> getAllTrip() {
-
-        List<Trip> trips=tripRepository.findAll();
-        return trips.stream().map(TripResponseDTO::tripToDto).toList();
+    public List<Trip> getAllTrip() {
+        return tripRepository.findAll();
     }
+
+
 
     //service method for get trip by id
     @Override
-    public TripResponseDTO getTripById(Long id) {
+    public Trip getTripById(Long id) {
         return tripRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Trip not found with id " + id));
 
     }
+
 
     //service method for updating a trip
     @Override
@@ -49,26 +55,29 @@ public class TripServiceImpl implements TripService{
        Trip trip=tripRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Trip not found with id " + id));
 
-        Trip updatedTrip=TripUpdateDTO.dtoToTrip(dto);
-
-        if (StringUtils.hasText(updatedTrip.getDestination())) {
-            trip.setDestination(updatedTrip.getDestination());
+        // Update destination if provided
+        if (StringUtils.hasText(dto.getDestination())) {
+            trip.setDestination(dto.getDestination());
         }
 
-        if (updatedTrip.getStartDate()!=null) {
-            trip.setStartDate(updatedTrip.getStartDate());
+        // Update startDate if provided and fix 2-digit year
+        if (dto.getStartDate() != null) {
+            trip.setStartDate(fixYear(dto.getStartDate()));
         }
 
-        if (updatedTrip.getEndDate()!=null) {
-            trip.setEndDate(updatedTrip.getEndDate());
+        // Update endDate if provided and fix 2-digit year
+        if (dto.getEndDate() != null) {
+            trip.setEndDate(fixYear(dto.getEndDate()));
         }
 
-        if (updatedTrip.getStatus()!=null) {
-            trip.setStatus(updatedTrip.getStatus());
+        // Update status if provided
+        if (StringUtils.hasText(dto.getStatus())) {
+            trip.setStatus(TripStatus.valueOf(dto.getStatus()));
         }
 
-        if (updatedTrip.getPrice()!=null) {
-            trip.setPrice(updatedTrip.getPrice());
+        // Update price if provided
+        if (dto.getPrice() != null) {
+            trip.setPrice(dto.getPrice());
         }
 
         return tripRepository.save(trip);
@@ -78,6 +87,21 @@ public class TripServiceImpl implements TripService{
     @Override
     public void deleteTripById(Long id) {
 
+    }
+
+    //extra utility method
+    private Date fixYear(Date date) {
+        if (date == null) return null;
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        int year = cal.get(Calendar.YEAR);
+
+        if (year < 100) {          // If user entered '25', convert to 2025
+            cal.set(Calendar.YEAR, 2000 + year);
+        }
+
+        return cal.getTime();
     }
 
 }
