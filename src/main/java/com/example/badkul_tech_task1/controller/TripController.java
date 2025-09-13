@@ -35,15 +35,15 @@ public class TripController {
                HttpStatus.OK.value(),
                LocalDateTime.now()
        );
-
        return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
 
 
+
     //endpoint for getting all trips
     @GetMapping("trips")
-    public ResponseEntity<ApiResponse<List<Trip>>> getAllTrip(@PathVariable Long id){
+    public ResponseEntity<ApiResponse<List<Trip>>> getAllTrip(){
         List<Trip> fetchedTrips=tripService.getAllTrip();
 
         ApiResponse<List<Trip>> response=new ApiResponse<>(

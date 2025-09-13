@@ -67,7 +67,7 @@ public class GlobalExceptionHandler {
         ErrorResponse response = new ErrorResponse(
                 "date should be in Valid format (dd-MM-yyyy).",
                 null,
-                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.BAD_REQUEST.value(),
                 LocalDateTime.now()
         );
 
