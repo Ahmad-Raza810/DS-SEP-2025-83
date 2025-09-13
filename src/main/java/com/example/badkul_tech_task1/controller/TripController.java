@@ -1,6 +1,7 @@
 package com.example.badkul_tech_task1.controller;
 
 
+import com.example.badkul_tech_task1.dtos.TripRequestDTO;
 import com.example.badkul_tech_task1.model.Trip;
 import com.example.badkul_tech_task1.response.ApiResponse;
 import com.example.badkul_tech_task1.service.TripService;
@@ -25,8 +26,8 @@ public class TripController {
 
     //endpoint for creating a trip
     @PostMapping("trip")
-    public ResponseEntity<ApiResponse<Trip>> addTrip(@RequestBody @Valid Trip trip){
-       Trip addedTrip=tripService.addTrip(trip);
+    public ResponseEntity<ApiResponse<Trip>> addTrip(@RequestBody @Valid TripRequestDTO dto){
+       Trip addedTrip=tripService.addTrip(dto);
 
        ApiResponse<Trip> response=new ApiResponse<>(
                addedTrip,

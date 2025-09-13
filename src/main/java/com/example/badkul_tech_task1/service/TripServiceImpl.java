@@ -1,5 +1,6 @@
 package com.example.badkul_tech_task1.service;
 
+import com.example.badkul_tech_task1.dtos.TripRequestDTO;
 import com.example.badkul_tech_task1.exception.ResourceNotFoundException;
 import com.example.badkul_tech_task1.model.Trip;
 import com.example.badkul_tech_task1.repository.TripRepository;
@@ -16,9 +17,10 @@ public class TripServiceImpl implements TripService{
         this.tripRepository = tripRepository;
     }
 
-   //service method for for creating a trip
+   //service method for creating a trip
     @Override
-    public Trip addTrip(Trip trip) {
+    public Trip addTrip(TripRequestDTO dto) {
+        Trip trip=TripRequestDTO.dtoToTrip(dto);
         return tripRepository.save(trip);
     }
 
@@ -39,6 +41,8 @@ public class TripServiceImpl implements TripService{
     //service method for updating a trip
     @Override
     public Trip updateTripById(Long id, Trip trip) {
+        tripRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Trip not found with id " + id));
         return null;
     }
 

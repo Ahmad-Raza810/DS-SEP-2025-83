@@ -4,6 +4,7 @@ package com.example.badkul_tech_task1.exception;
 import com.example.badkul_tech_task1.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -57,5 +58,20 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
     }
+
+
+//    //handler for HttpMessageNotReadableException
+//    @ExceptionHandler(value = HttpMessageNotReadableException.class)
+//    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+//
+//        ErrorResponse response = new ErrorResponse(
+//                "date should be in Valid format (dd-MM-yyyy).",
+//                null,
+//                HttpStatus.NOT_FOUND.value(),
+//                LocalDateTime.now()
+//        );
+//
+//        return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
+//    }
 
 }

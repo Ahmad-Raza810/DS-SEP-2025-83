@@ -1,7 +1,11 @@
-package com.example.badkul_tech_task1.model;
+package com.example.badkul_tech_task1.dtos;
 
+import com.example.badkul_tech_task1.annotation.ValueOfEnum;
+import com.example.badkul_tech_task1.model.Trip;
+import com.example.badkul_tech_task1.model.TripStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
@@ -12,16 +16,10 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
-@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Trip {
-
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class TripRequestDTO {
 
     @NotBlank(message = "destination is required.")
     private String destination;
@@ -39,13 +37,25 @@ public class Trip {
     private Double price;
 
     @NotNull(message = "status is required.")
+    @ValueOfEnum(enumClass = TripStatus.class,message = "status must be PLANNED, ONGOING or COMPLETED")
     @Enumerated(EnumType.STRING)
     private TripStatus status;
 
     @AssertTrue(message = "End date must be After start date.")
-        public boolean isValidDateRange() {
-        if (startDate != null && endDate != null) return endDate.after(startDate);
-        return false;
+    public boolean isValidDateRange() {
+        return endDate.after(startDate);
     }
 
+
+    //method which convert dto object into Trip object
+    public static Trip dtoToTrip(TripRequestDTO dto){
+        Trip trip=new Trip();
+        trip.setDestination(trip.getDestination());
+        trip.setStatus(dto.getStatus());
+        trip.setPrice(dto.getPrice());
+        trip.setStartDate(dto.getStartDate());
+        trip.setEndDate(dto.getEndDate());
+
+        return trip;
+    }
 }
