@@ -18,6 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/")
+@CrossOrigin("*")
 public class TripController {
 
     private final TripService tripService;
@@ -101,6 +102,24 @@ public class TripController {
     @DeleteMapping("trip/{id}")
     public ResponseEntity<ApiResponse<TripResponseDTO>> deleteTripById(@PathVariable Long id){
         tripService.deleteTripById(id);
+        ApiResponse<TripResponseDTO> response=new ApiResponse<>(
+                null,
+                "trip deleted successfully.",
+                HttpStatus.OK.value(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    //endpoint for search trip by destination
+    @GetMapping("trip/search/{destination}")
+    public ResponseEntity<ApiResponse<List<TripResponseDTO>>> searchTripByDestination(@PathVariable String destination,
+                                                                                      @RequestParam(defaultValue = "0")int page,
+                                                                                      @RequestParam(defaultValue ="10")int size,
+                                                                                      @RequestParam(defaultValue = "id")String sortBy,
+                                                                                      @RequestParam(defaultValue = "asc")String direction){
+
+        tripService.searchTripByDestination(destination,page,size,sortBy,direction);
         ApiResponse<TripResponseDTO> response=new ApiResponse<>(
                 null,
                 "trip deleted successfully.",
