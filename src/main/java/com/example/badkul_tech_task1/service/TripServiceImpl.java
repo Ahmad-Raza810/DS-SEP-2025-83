@@ -1,7 +1,6 @@
 package com.example.badkul_tech_task1.service;
 
 import com.example.badkul_tech_task1.dtos.TripRequestDTO;
-import com.example.badkul_tech_task1.dtos.TripResponseDTO;
 import com.example.badkul_tech_task1.dtos.TripUpdateDTO;
 import com.example.badkul_tech_task1.exception.ResourceNotFoundException;
 import com.example.badkul_tech_task1.model.Trip;
@@ -14,9 +13,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 @Service
 public class TripServiceImpl implements TripService{
@@ -106,20 +102,5 @@ public class TripServiceImpl implements TripService{
 
 
     }
-
-//    //extra utility method
-//    private Date fixYear(Date date) {
-//        if (date == null) return null;
-//
-//        Calendar cal = Calendar.getInstance();
-//        cal.setTime(date);
-//        int year = cal.get(Calendar.YEAR);
-//
-//        if (year < 100) {          // If user entered '25', convert to 2025
-//            cal.set(Calendar.YEAR, 2000 + year);
-//        }
-//
-//        return cal.getTime();
-//    }
 
 }
