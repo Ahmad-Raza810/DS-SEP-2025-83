@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
         Map<String,String> errors=new HashMap<>();
 
 
-        //extracting all validation exception in a map
+        //extracting field level errors
         exception.getBindingResult()
                 .getFieldErrors()
                 .forEach(error->
@@ -32,6 +32,13 @@ public class GlobalExceptionHandler {
                                 error.getField(),
                                 error.getDefaultMessage()
                         ));
+
+        //extracting class level errors
+        exception.getBindingResult().getGlobalErrors()
+                .forEach(error -> errors.put(
+                        "updateFields",
+                        error.getDefaultMessage()
+                ));
 
         //preparing error response
         ErrorResponse response=new ErrorResponse(
