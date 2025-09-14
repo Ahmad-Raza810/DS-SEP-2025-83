@@ -12,8 +12,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.Date;
-
 @Entity
 @Data
 @NoArgsConstructor
@@ -47,7 +45,7 @@ public class Trip {
     @JsonIgnore
     @AssertTrue(message = "End date must be After start date.")
         public boolean isValidDateRange() {
-        if (startDate != null && endDate != null) return endDate.after(startDate);
+        if (startDate != null && endDate != null) return endDate.isAfter(startDate);
         return false;
     }
 
