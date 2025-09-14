@@ -7,6 +7,10 @@ import com.example.badkul_tech_task1.exception.ResourceNotFoundException;
 import com.example.badkul_tech_task1.model.Trip;
 import com.example.badkul_tech_task1.model.TripStatus;
 import com.example.badkul_tech_task1.repository.TripRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -34,8 +38,17 @@ public class TripServiceImpl implements TripService{
 
     //service method for get all trip
     @Override
-    public List<Trip> getAllTrip() {
-        return tripRepository.findAll();
+    public Page<Trip> getAllTrip(int page, int size, String sortBy, String direction) {
+
+        //sorting
+        Sort sort=direction.equalsIgnoreCase("desc")?
+                Sort.by(sortBy).descending():
+                Sort.by(sortBy).ascending();
+
+        //pagination
+        Pageable pageable= PageRequest.of(page,size,sort);
+
+        return tripRepository.findAll(pageable);
     }
 
 
@@ -86,6 +99,11 @@ public class TripServiceImpl implements TripService{
     //service method for deleting a trip
     @Override
     public void deleteTripById(Long id) {
+        tripRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Trip not found with id " + id));
+
+        tripRepository.deleteById(id);
+
 
     }
 
