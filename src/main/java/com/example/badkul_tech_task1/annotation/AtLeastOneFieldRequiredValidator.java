@@ -8,25 +8,16 @@ import org.springframework.util.StringUtils;
 
 public class AtLeastOneFieldRequiredValidator implements ConstraintValidator<AtLeastOneFieldRequired, TripUpdateDTO> {
     @Override
-    public boolean isValid(TripUpdateDTO value, ConstraintValidatorContext context) {
-
-        if (value == null) {
+    public boolean isValid(TripUpdateDTO dto, ConstraintValidatorContext context) {
+        if (dto == null) {
             return false;
         }
 
-        if (StringUtils.hasText(value.getDestination())){
-            return true;
-        }
-        if (StringUtils.hasText(value.getStatus())) {
-            return  true;
-        }
-        if (value.getPrice()!=null) {
-            return  true;
-        }
-        if (value.getStartDate()!=null) {
-            return  true;
-        }
-        return value.getEndDate() != null;
-
+        return   StringUtils.hasText(dto.getDestination()) || // check non-null & not empty
+                dto.getStartDate() != null ||
+                dto.getEndDate() != null ||
+                dto.getPrice() != null ||
+                StringUtils.hasText(dto.getStatus());
     }
+
 }
