@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @RestController
 @RequestMapping("api/")
@@ -30,103 +29,101 @@ public class TripController {
 
     //endpoint for creating a trip
     @PostMapping("trip")
-    public ResponseEntity<ApiResponse<TripResponseDTO>> addTrip(@RequestBody @Valid TripRequestDTO requestDTO){
-       Trip addedTrip=tripService.addTrip(requestDTO);
-       TripResponseDTO  responseDTO=TripResponseDTO.tripToDto(addedTrip);
+    public ResponseEntity<ApiResponse<TripResponseDTO>> addTrip(@RequestBody @Valid TripRequestDTO requestDTO) {
+        Trip addedTrip = tripService.addTrip(requestDTO);
+        TripResponseDTO responseDTO = TripResponseDTO.tripToDto(addedTrip);
 
-       ApiResponse<TripResponseDTO> response=new ApiResponse<>(
-               responseDTO,
-               "trip successfully added.",
-               HttpStatus.OK.value(),
-               LocalDateTime.now()
-       );
-       return new ResponseEntity<>(response,HttpStatus.OK);
+        ApiResponse<TripResponseDTO> response = new ApiResponse<>(
+                responseDTO,
+                "trip successfully added.",
+                HttpStatus.OK.value(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
-
 
 
     //endpoint for getting all trips
     @GetMapping("trips")
     public ResponseEntity<ApiResponse<Page<TripResponseDTO>>> getAllTrip(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10")int size,
-            @RequestParam(defaultValue = "id")String sortBy,
-            @RequestParam(defaultValue = "asc")String direction
-    ){
-        Page<Trip> fetchedPages=tripService.getAllTrip(page,size,sortBy,direction);
-        Page<TripResponseDTO> dtos=fetchedPages.map(TripResponseDTO::tripToDto);
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction
+    ) {
+        Page<Trip> fetchedPages = tripService.getAllTrip(page, size, sortBy, direction);
+        Page<TripResponseDTO> dtos = fetchedPages.map(TripResponseDTO::tripToDto);
 
-        ApiResponse<Page<TripResponseDTO>> response=new ApiResponse<>(
+        ApiResponse<Page<TripResponseDTO>> response = new ApiResponse<>(
                 dtos,
                 "trips fetched successfully.",
                 HttpStatus.OK.value(),
                 LocalDateTime.now()
         );
-        return new ResponseEntity<>(response,HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 
-
-     //endpoint for getting a trip by id
+    //endpoint for getting a trip by id
     @GetMapping("trip/{id}")
-    public ResponseEntity<ApiResponse<TripResponseDTO>> getTripById(@PathVariable Long id){
-        Trip fetchedTrip=tripService.getTripById(id);
-        TripResponseDTO responseDTO=TripResponseDTO.tripToDto(fetchedTrip);
-        ApiResponse<TripResponseDTO> response=new ApiResponse<>(
+    public ResponseEntity<ApiResponse<TripResponseDTO>> getTripById(@PathVariable Long id) {
+        Trip fetchedTrip = tripService.getTripById(id);
+        TripResponseDTO responseDTO = TripResponseDTO.tripToDto(fetchedTrip);
+        ApiResponse<TripResponseDTO> response = new ApiResponse<>(
                 responseDTO,
                 "trip fetched successfully.",
                 HttpStatus.OK.value(),
                 LocalDateTime.now()
         );
-        return new ResponseEntity<>(response,HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
 
 
     //endpoint for updating a trip by id
     @PutMapping("trip/{id}")
-    public ResponseEntity<ApiResponse<TripResponseDTO>> updateTripById(@PathVariable Long id, @Valid @RequestBody TripUpdateDTO dto){
-        Trip updatedTrip=tripService.updateTripById(id,dto);
-        TripResponseDTO responseDTO=TripResponseDTO.tripToDto(updatedTrip);
-        ApiResponse<TripResponseDTO> response=new ApiResponse<>(
+    public ResponseEntity<ApiResponse<TripResponseDTO>> updateTripById(@PathVariable Long id, @Valid @RequestBody TripUpdateDTO dto) {
+        Trip updatedTrip = tripService.updateTripById(id, dto);
+        TripResponseDTO responseDTO = TripResponseDTO.tripToDto(updatedTrip);
+        ApiResponse<TripResponseDTO> response = new ApiResponse<>(
                 responseDTO,
                 "trip updated successfully.",
                 HttpStatus.OK.value(),
                 LocalDateTime.now()
         );
-        return new ResponseEntity<>(response,HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     //endpoint for deleting a trip by id
     @DeleteMapping("trip/{id}")
-    public ResponseEntity<ApiResponse<TripResponseDTO>> deleteTripById(@PathVariable Long id){
+    public ResponseEntity<ApiResponse<TripResponseDTO>> deleteTripById(@PathVariable Long id) {
         tripService.deleteTripById(id);
-        ApiResponse<TripResponseDTO> response=new ApiResponse<>(
+        ApiResponse<TripResponseDTO> response = new ApiResponse<>(
                 null,
                 "trip deleted successfully.",
                 HttpStatus.OK.value(),
                 LocalDateTime.now()
         );
-        return new ResponseEntity<>(response,HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     //endpoint for search trip by destination
     @GetMapping("trip/search/{destination}")
-    public ResponseEntity<ApiResponse<List<TripResponseDTO>>> searchTripByDestination(@PathVariable String destination,
-                                                                                      @RequestParam(defaultValue = "0")int page,
-                                                                                      @RequestParam(defaultValue ="10")int size,
-                                                                                      @RequestParam(defaultValue = "id")String sortBy,
-                                                                                      @RequestParam(defaultValue = "asc")String direction){
+    public ResponseEntity<ApiResponse<Page<TripResponseDTO>>> searchTripByDestination(@PathVariable String destination,
+                                                                                      @RequestParam(defaultValue = "0") int page,
+                                                                                      @RequestParam(defaultValue = "10") int size,
+                                                                                      @RequestParam(defaultValue = "id") String sortBy,
+                                                                                      @RequestParam(defaultValue = "asc") String direction) {
 
-        tripService.searchTripByDestination(destination,page,size,sortBy,direction);
-        ApiResponse<TripResponseDTO> response=new ApiResponse<>(
-                null,
-                "trip deleted successfully.",
+        Page<Trip> pages = tripService.searchTripByDestination(destination, page, size, sortBy, direction);
+        Page<TripResponseDTO> dtos = pages.map(TripResponseDTO::tripToDto);
+
+        ApiResponse<Page<TripResponseDTO>> response = new ApiResponse<>(
+                dtos,
+                "trips fetched successfully.",
                 HttpStatus.OK.value(),
                 LocalDateTime.now()
         );
-        return new ResponseEntity<>(response,HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }
