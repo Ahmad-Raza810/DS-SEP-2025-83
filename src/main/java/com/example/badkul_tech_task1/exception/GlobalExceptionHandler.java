@@ -65,7 +65,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
 
         ErrorResponse response = new ErrorResponse(
-                "date should be in Valid format (dd-MM-yyyy).",
+                "date should be in Valid format (yyyy-MM-dd).",
                 null,
                 HttpStatus.BAD_REQUEST.value(),
                 LocalDateTime.now()

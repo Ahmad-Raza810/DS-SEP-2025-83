@@ -62,12 +62,12 @@ public class TripServiceImpl implements TripService{
 
         // Update startDate if provided and fix 2-digit year
         if (dto.getStartDate() != null) {
-            trip.setStartDate(fixYear(dto.getStartDate()));
+            trip.setStartDate(dto.getStartDate());
         }
 
         // Update endDate if provided and fix 2-digit year
         if (dto.getEndDate() != null) {
-            trip.setEndDate(fixYear(dto.getEndDate()));
+            trip.setEndDate(dto.getEndDate());
         }
 
         // Update status if provided
@@ -89,19 +89,19 @@ public class TripServiceImpl implements TripService{
 
     }
 
-    //extra utility method
-    private Date fixYear(Date date) {
-        if (date == null) return null;
-
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        int year = cal.get(Calendar.YEAR);
-
-        if (year < 100) {          // If user entered '25', convert to 2025
-            cal.set(Calendar.YEAR, 2000 + year);
-        }
-
-        return cal.getTime();
-    }
+//    //extra utility method
+//    private Date fixYear(Date date) {
+//        if (date == null) return null;
+//
+//        Calendar cal = Calendar.getInstance();
+//        cal.setTime(date);
+//        int year = cal.get(Calendar.YEAR);
+//
+//        if (year < 100) {          // If user entered '25', convert to 2025
+//            cal.set(Calendar.YEAR, 2000 + year);
+//        }
+//
+//        return cal.getTime();
+//    }
 
 }

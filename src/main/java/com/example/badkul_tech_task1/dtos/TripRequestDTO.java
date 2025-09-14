@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -25,12 +26,12 @@ public class TripRequestDTO {
     private String destination;
 
     @NotNull(message = "start date is required.")
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    private Date startDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate startDate;
 
     @NotNull(message = "end date is required.")
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    private Date endDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate endDate;
 
     @NotNull(message = "price is required.")
     @DecimalMin(value = "500.0", message = "price should be at least 500.")
@@ -46,7 +47,7 @@ public class TripRequestDTO {
         if (startDate == null || endDate==null) {
             return false;
         }
-        return endDate.after(startDate);
+        return endDate.isAfter(startDate);
     }
 
 
