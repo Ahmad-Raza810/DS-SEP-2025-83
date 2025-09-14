@@ -8,6 +8,7 @@ import com.example.badkul_tech_task1.model.Trip;
 import com.example.badkul_tech_task1.response.ApiResponse;
 import com.example.badkul_tech_task1.service.TripService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,12 +47,16 @@ public class TripController {
 
     //endpoint for getting all trips
     @GetMapping("trips")
-    public ResponseEntity<ApiResponse<List<TripResponseDTO>>> getAllTrip(){
-        List<Trip> fetchedTrips=tripService.getAllTrip();
+    public ResponseEntity<ApiResponse<Page<TripResponseDTO>>> getAllTrip(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10")int size,
+            @RequestParam(defaultValue = "id")String sortBy,
+            @RequestParam(defaultValue = "asc")String direction
+    ){
+        Page<Trip> fetchedPages=tripService.getAllTrip(page,size,sortBy,direction);
+        Page<TripResponseDTO> dtos=fetchedPages.map(TripResponseDTO::tripToDto);
 
-        List<TripResponseDTO> dtos=fetchedTrips.stream().map(TripResponseDTO::tripToDto).toList();
-
-        ApiResponse<List<TripResponseDTO>> response=new ApiResponse<>(
+        ApiResponse<Page<TripResponseDTO>> response=new ApiResponse<>(
                 dtos,
                 "trips fetched successfully.",
                 HttpStatus.OK.value(),
@@ -80,17 +85,29 @@ public class TripController {
 
     //endpoint for updating a trip by id
     @PutMapping("trip/{id}")
-    public ResponseEntity<ApiResponse<TripResponseDTO>> updateTripById(@PathVariable Long id, TripUpdateDTO dto){
+    public ResponseEntity<ApiResponse<TripResponseDTO>> updateTripById(@PathVariable Long id, @Valid @RequestBody TripUpdateDTO dto){
         Trip updatedTrip=tripService.updateTripById(id,dto);
         TripResponseDTO responseDTO=TripResponseDTO.tripToDto(updatedTrip);
         ApiResponse<TripResponseDTO> response=new ApiResponse<>(
                 responseDTO,
-                "trip fetched successfully.",
+                "trip updated successfully.",
                 HttpStatus.OK.value(),
                 LocalDateTime.now()
         );
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
+    //endpoint for deleting a trip by id
+    @DeleteMapping("trip/{id}")
+    public ResponseEntity<ApiResponse<TripResponseDTO>> deleteTripById(@PathVariable Long id){
+        tripService.deleteTripById(id);
+        ApiResponse<TripResponseDTO> response=new ApiResponse<>(
+                null,
+                "trip deleted successfully.",
+                HttpStatus.OK.value(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
 
 }
