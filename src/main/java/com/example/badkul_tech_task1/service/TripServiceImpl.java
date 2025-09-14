@@ -15,7 +15,7 @@ import org.springframework.util.StringUtils;
 
 
 @Service
-public class TripServiceImpl implements TripService{
+public class TripServiceImpl implements TripService {
 
     private final TripRepository tripRepository;
 
@@ -24,10 +24,10 @@ public class TripServiceImpl implements TripService{
     }
 
 
-   //service method for creating a trip
+    //service method for creating a trip
     @Override
     public Trip addTrip(TripRequestDTO dto) {
-        Trip trip=TripRequestDTO.dtoToTrip(dto);
+        Trip trip = TripRequestDTO.dtoToTrip(dto);
         return tripRepository.save(trip);
     }
 
@@ -37,16 +37,15 @@ public class TripServiceImpl implements TripService{
     public Page<Trip> getAllTrip(int page, int size, String sortBy, String direction) {
 
         //sorting
-        Sort sort=direction.equalsIgnoreCase("desc")?
-                Sort.by(sortBy).descending():
+        Sort sort = direction.equalsIgnoreCase("desc") ?
+                Sort.by(sortBy).descending() :
                 Sort.by(sortBy).ascending();
 
         //pagination
-        Pageable pageable= PageRequest.of(page,size,sort);
+        Pageable pageable = PageRequest.of(page, size, sort);
 
         return tripRepository.findAll(pageable);
     }
-
 
 
     //service method for get trip by id
@@ -61,7 +60,7 @@ public class TripServiceImpl implements TripService{
     //service method for updating a trip
     @Override
     public Trip updateTripById(Long id, TripUpdateDTO dto) {
-       Trip trip=tripRepository.findById(id)
+        Trip trip = tripRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Trip not found with id " + id));
 
         // Update destination if provided
@@ -100,6 +99,24 @@ public class TripServiceImpl implements TripService{
 
         tripRepository.deleteById(id);
 
+
+    }
+
+    @Override
+    public Page<Trip> searchTripByDestination(String destination, int page, int size, String sortBy, String direction) {
+
+        Sort sort = direction.equalsIgnoreCase("desc") ?
+                Sort.by(sortBy).descending() :
+                Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Trip> trips = tripRepository.findByDestinationContainingIgnoreCase(destination, pageable);
+        if (trips.isEmpty()) {
+            throw new ResourceNotFoundException("trips not found with destination " + destination);
+        }
+
+        return trips;
 
     }
 
