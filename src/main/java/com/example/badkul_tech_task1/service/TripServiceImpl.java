@@ -120,4 +120,28 @@ public class TripServiceImpl implements TripService {
 
     }
 
+
+    @Override
+    public Page<Trip> filterByTripStatus(String status,int page,int size,String sortBy,String direction) {
+
+
+
+        //sorting
+        Sort sort=direction.equalsIgnoreCase("desc")?
+                Sort.by(sortBy).descending():
+                Sort.by(sortBy).ascending();
+
+        //paging
+        Pageable pageable=PageRequest.of(page,size,sort);
+
+        try {
+            TripStatus tripStatus=TripStatus.valueOf(status.toUpperCase());
+            return tripRepository.findByStatus(tripStatus,pageable);
+        }
+        catch (IllegalArgumentException exception){
+            throw new IllegalArgumentException("Invalid status" + status +
+            ". Allowed: PLANNED, ONGOING, COMPLETED");
+        }
+    }
+
 }

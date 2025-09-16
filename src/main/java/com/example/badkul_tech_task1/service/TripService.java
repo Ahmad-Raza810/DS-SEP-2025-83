@@ -3,6 +3,7 @@ package com.example.badkul_tech_task1.service;
 import com.example.badkul_tech_task1.dtos.TripRequestDTO;
 import com.example.badkul_tech_task1.dtos.TripUpdateDTO;
 import com.example.badkul_tech_task1.model.Trip;
+import com.example.badkul_tech_task1.model.TripStatus;
 import org.springframework.data.domain.Page;
 
 
@@ -19,5 +20,7 @@ public interface TripService {
     void deleteTripById(Long id);
 
     Page<Trip> searchTripByDestination(String destination, int page, int size, String sortBy, String direction);
+
+    Page<Trip> filterByTripStatus(String status,int page,int size,String sortBy,String direction);
 
 }
