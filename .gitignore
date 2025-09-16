@@ -1,12 +1,18 @@
-.idea
-.mvn
-.gitattributes
-HELP.md
-mvnw
-mvnw.cmd
-
-# Ignore build output
+# Build output
+target/
 *.class
-target
 
+# Logs
+*.log
 
+# IDE
+.idea/
+*.iml
+.vscode/
+*.classpath
+*.project
+.settings/
+
+# OS
+.DS_Store
+Thumbs.db
