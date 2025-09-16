@@ -10,10 +10,12 @@ import com.example.badkul_tech_task1.response.ApiResponse;
 import com.example.badkul_tech_task1.service.TripService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @RestController
@@ -148,4 +150,27 @@ public class TripController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+
+    //endpoint for filter trip by date range
+    @GetMapping("trip/daterange")
+    public ResponseEntity<ApiResponse<Page<TripResponseDTO>>> filterByDateRange(
+            @RequestParam(defaultValue ="2010-01-01") @DateTimeFormat(iso=DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(defaultValue ="2025-01-01") @DateTimeFormat(iso=DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "price") String sortBy,
+            @RequestParam(defaultValue = "desc") String direction) {
+
+
+        Page<Trip> pages = tripService.filterByDateRange(startDate,endDate,page, size, sortBy, direction);
+        Page<TripResponseDTO> dtos = pages.map(TripResponseDTO::tripToDto);
+
+        ApiResponse<Page<TripResponseDTO>> response = new ApiResponse<>(
+                dtos,
+                "trips fetched successfully.",
+                HttpStatus.OK.value(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }

@@ -6,8 +6,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDate;
+
 public interface TripRepository extends JpaRepository<Trip, Long> {
     Page<Trip> findByDestinationContainingIgnoreCase(String destination, Pageable pageable);
 
     Page<Trip> findByStatus(TripStatus status,Pageable pageable);
+
+    Page<Trip> findByStartDateBetween(LocalDate startDate,LocalDate endDate,Pageable pageable);
 }
