@@ -13,6 +13,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
+
 
 @Service
 public class TripServiceImpl implements TripService {
@@ -142,6 +144,28 @@ public class TripServiceImpl implements TripService {
             throw new IllegalArgumentException("Invalid status" + status +
             ". Allowed: PLANNED, ONGOING, COMPLETED");
         }
+    }
+
+
+
+    @Override
+    public Page<Trip> filterByDateRange(LocalDate startDate, LocalDate endDate, int page, int size, String sortBy, String direction) {
+
+        //sorting
+        Sort sort=direction.equalsIgnoreCase("desc")?
+                Sort.by(sortBy).descending():
+                Sort.by(sortBy).ascending();
+
+        //paging
+        Pageable pageable=PageRequest.of(page,size,sort);
+
+
+        if (endDate.isBefore(startDate)) {
+            throw new IllegalArgumentException("end date should be After start date.");
+        }
+
+        return tripRepository.findByStartDateBetween(startDate,endDate,pageable);
+
     }
 
 }
