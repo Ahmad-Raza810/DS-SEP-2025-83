@@ -5,6 +5,7 @@ import com.example.badkul_tech_task1.dtos.TripRequestDTO;
 import com.example.badkul_tech_task1.dtos.TripResponseDTO;
 import com.example.badkul_tech_task1.dtos.TripUpdateDTO;
 import com.example.badkul_tech_task1.model.Trip;
+import com.example.badkul_tech_task1.model.TripStatus;
 import com.example.badkul_tech_task1.response.ApiResponse;
 import com.example.badkul_tech_task1.service.TripService;
 import jakarta.validation.Valid;
@@ -115,6 +116,27 @@ public class TripController {
                                                                                       @RequestParam(defaultValue = "asc") String direction) {
 
         Page<Trip> pages = tripService.searchTripByDestination(destination, page, size, sortBy, direction);
+        Page<TripResponseDTO> dtos = pages.map(TripResponseDTO::tripToDto);
+
+        ApiResponse<Page<TripResponseDTO>> response = new ApiResponse<>(
+                dtos,
+                "trips fetched successfully.",
+                HttpStatus.OK.value(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    //endpoint for filter trip by trip status
+    @GetMapping("trip/filter")
+    public ResponseEntity<ApiResponse<Page<TripResponseDTO>>> filterByTripStatus(
+            @RequestParam(defaultValue = "PLANNED") String status,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "price") String sortBy,
+            @RequestParam(defaultValue = "desc") String direction) {
+
+        Page<Trip> pages = tripService.filterByTripStatus(status,page, size, sortBy, direction);
         Page<TripResponseDTO> dtos = pages.map(TripResponseDTO::tripToDto);
 
         ApiResponse<Page<TripResponseDTO>> response = new ApiResponse<>(
