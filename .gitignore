@@ -4,3 +4,7 @@
 HELP.md
 mvnw
 mvnw.cmd
+
+# Ignore build output
+/target/
+*.class
